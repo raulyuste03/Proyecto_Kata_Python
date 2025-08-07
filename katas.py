@@ -196,13 +196,14 @@ def palabras_mas_largas(lista_palabras, n):
 
 # ---------------------------------------------
 # KATA 17: Lista de dígitos a número usando reduce
+from functools import reduce
+
 def lista_a_numero(lista_digitos):
     """
     Convierte una lista de dígitos en el número correspondiente.
+    Devuelve 0 si la lista está vacía.
     """
-    return reduce(lambda acc, d: acc * 10 + d, lista_digitos)
-# Ejemplo:
-# print(lista_a_numero([5,7,2]))
+    return reduce(lambda acc, d: acc * 10 + d, lista_digitos, 0)
 
 # ---------------------------------------------
 # KATA 18: Extraer estudiantes con nota >= 90 con filter
@@ -258,14 +259,14 @@ def concatenar_palabras(lista_palabras):
 
 # ---------------------------------------------
 # KATA 24: Diferencia total en una lista con reduce
+from functools import reduce
+
 def diferencia_total(lista):
     """
     Calcula la diferencia total de los valores de una lista.
+    Si la lista está vacía, devuelve 0.
     """
-    return reduce(lambda x, y: x - y, lista)
-# Ejemplo:
-# print(diferencia_total([10,2,1]))
-
+    return reduce(lambda x, y: x - y, lista, 0)
 # ---------------------------------------------
 # KATA 25: Contar caracteres de una cadena
 def contar_caracteres(cadena):
@@ -402,9 +403,12 @@ class UsuarioBanco:
         else:
             raise ValueError("Saldo insuficiente.")
     def transferir_dinero(self, otro_usuario, cantidad):
-        if otro_usuario.saldo >= cantidad:
-            otro_usuario.saldo -= cantidad
-            self.saldo += cantidad
+        """ 
+        Transfiere cantidad desde self a otro_usuario.
+        """
+        if self.saldo >= cantidad:
+            self.saldo -= cantidad
+            otro_usuario.saldo += cantidad
         else:
             raise ValueError("Saldo insuficiente en el usuario origen.")
     def agregar_dinero(self, cantidad):
@@ -508,41 +512,23 @@ def area_figura(figura, datos):
 # print(area_figura("rectangulo", (4, 5)))
 
 # ---------------------------------------------
-# KATA 40: Descuento en tienda online con condicionales
+# KATA 40 y 41: Descuento en tienda online con condicionales
 def compra_con_descuento():
     """
-    Calcula el precio final de una compra aplicando descuento si corresponde.
+    Calcula y devuelve el precio final aplicando un posible descuento.
     """
     try:
-        precio = float(input("Precio original: "))
-        tiene_cupon = input("¿Tienes cupón de descuento? (si/no): ").lower()
-        descuento = 0
-        if tiene_cupon == "si":
-            descuento = float(input("Valor del cupón: "))
-            if descuento <= 0:
-                descuento = 0
-        final = precio - descuento if descuento > 0 else precio
-        print(f"El precio final es: {final} €")
-    except Exception as e:
-        print(f"Error: {e}")
-
-# ---------------------------------------------
-# KATA 41: Descuento en tienda online con condicionales
-def compra_con_descuento():
-    """
-    Calcula el precio final de una compra aplicando descuento si corresponde.
-    """
-    try:
-        precio = float(input("Introduce el precio original del artículo: "))
+        precio = float(input("Introduce el precio original (€): "))
         tiene_cupon = input("¿Tienes cupón de descuento? (si/no): ").strip().lower()
-        descuento = 0
+        descuento = 0.0
         if tiene_cupon == "si":
-            descuento = float(input("Introduce el valor del cupón de descuento: "))
-            if descuento <= 0:
-                print("El valor del cupón no es válido. No se aplica descuento.")
-                descuento = 0
-        final = precio - descuento if descuento > 0 else precio
-        print(f"El precio final es: {final} €")
+            valor = float(input("Valor del cupón (€): "))
+            if valor > 0:
+                descuento = valor
+            else:
+                print("El valor del cupón no es válido, se ignora.")
+        final = max(precio - descuento, 0)
+        print(f"Precio final: {final:.2f} €")
     except ValueError:
         print("Error: Debes introducir valores numéricos válidos.")
 # --- Ejemplo de uso de clases  ---
